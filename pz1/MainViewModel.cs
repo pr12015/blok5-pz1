@@ -16,11 +16,8 @@ namespace pz1
         private ContentViewModel _contentViewModel;
         private BindableBase _currentViewModel;
 
-        public delegate void RegisterEventHandler(object source, RegisterEventArgs args);
+        public delegate void RegisterEventHandler(object source, RegistrationEventArgs args);
         public event RegisterEventHandler Registered;
-
-        public delegate void LoggingOutEventHandler(object source, System.EventArgs args);
-        public event LoggingOutEventHandler LoggedOut;
 
         public MainWindowViewModel() { }
 
@@ -30,7 +27,7 @@ namespace pz1
 
             _loginViewModel = _container.Resolve<LoginViewModel>();
             _loginViewModel.Login += OnLogin;
-            _loginViewModel.Registration += OnRegistration;
+            _loginViewModel.Registration += OnRegistering;
 
             _contentViewModel = _container.Resolve<ContentViewModel>();
 
@@ -52,15 +49,15 @@ namespace pz1
         }
 
         // Subscription to Registering event from LoginViewModel
-        private void OnRegistration(object source, RegisterEventArgs e)
+        private void OnRegistering(object source, RegistrationEventArgs e)
         {
             CurrentViewModel = _contentViewModel;
-            OnRegistered(e);
+            OnRegistration(e);
         }
 
         // Fire an event that ContentViewModel listens for
         // so it can change the CurrentContentViewModel to AddImageViewModel
-        private void OnRegistered(RegisterEventArgs e)
+        private void OnRegistration(RegistrationEventArgs e)
         {
             Registered?.Invoke(this, e);
         }

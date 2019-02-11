@@ -64,13 +64,21 @@ namespace pz1
         }
 
 
+        // TODO: Fix read method
         public User Read()
         {
             var serializer = new XmlSerializer(typeof(List<User>), new XmlRootAttribute("ArrayOfUsers"));
-            using (var reader = new StreamReader(_path))
+            try
             {
-                var users = serializer.Deserialize(reader);
-                return users as User;
+                using (var reader = new StreamReader(_path))
+                {
+                    var users = serializer.Deserialize(reader);
+                    return users as User;
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
             }
         }
     }

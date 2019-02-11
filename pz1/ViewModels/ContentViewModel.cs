@@ -17,16 +17,12 @@ namespace pz1.ViewModels
         private IUnityContainer _container;
         private DataBase _dataBase;
 
-        private ImagesViewModel _showImagesViewModel;
+        private ImagesViewModel _ImagesViewModel;
         private AddImageViewModel _addImageViewModel;
         private AccountDetailsViewModel _accountDetailsViewModel;
         private BindableBase _currentContentViewModel;
 
         public Command<string> NavCommand { get; private set; }
-        public Command LogoutCommand { get; private set; }
-
-        public delegate void LogoutEventHandler(object sender, System.EventArgs args);
-        public event LogoutEventHandler LoggedOut;
 
         public ContentViewModel() { }
 
@@ -36,14 +32,13 @@ namespace pz1.ViewModels
 
             _dataBase = db;
 
-            _showImagesViewModel = _container.Resolve<ImagesViewModel>();
+            _ImagesViewModel = _container.Resolve<ImagesViewModel>();
             _addImageViewModel = _container.Resolve<AddImageViewModel>();
             _accountDetailsViewModel = _container.Resolve<AccountDetailsViewModel>();
 
-            CurrentContentViewModel = _showImagesViewModel;
+            CurrentContentViewModel = _ImagesViewModel;
 
             NavCommand = new Command<string>(OnNav);
-            LogoutCommand = new Command(OnLoggingOut);
         }
 
         public BindableBase CurrentContentViewModel
@@ -57,7 +52,7 @@ namespace pz1.ViewModels
             switch (destination)
             {
                 case "showImages":
-                    CurrentContentViewModel = _showImagesViewModel;
+                    CurrentContentViewModel = _ImagesViewModel;
                     break;
                 case "addImage":
                     CurrentContentViewModel = _addImageViewModel;
@@ -68,13 +63,9 @@ namespace pz1.ViewModels
             }
         }
 
-        private void OnLoggingOut()
-        {
-            LoggedOut?.Invoke(this, System.EventArgs.Empty);
-        }
 
         // Subscription to Registered event on MainWindowViewModel
-        public void OnRegistered(object source, RegistrationEventArgs e)
+        public void OnRegistration(object source, RegistrationEventArgs e)
         {
             CurrentContentViewModel = _addImageViewModel;
             CurrentUsername = e.Username;
